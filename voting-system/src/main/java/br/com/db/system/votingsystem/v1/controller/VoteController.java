@@ -41,7 +41,7 @@ public class VoteController implements VoteControllerDoc {
 
     @Override
     @PostMapping
-    public ResponseEntity<VoteDTO> create(@RequestBody @Valid VoteDTO voteDTO) throws Exception {
+    public ResponseEntity<VoteDTO> create(@RequestBody @Valid VoteDTO voteDTO) {
         VoteDTO created = service.create(voteDTO);
         return ResponseEntity.status(201).body(created);
     }

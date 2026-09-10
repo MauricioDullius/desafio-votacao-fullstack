@@ -45,7 +45,7 @@ public interface MemberControllerDoc {
             @ApiResponse(responseCode = "404", description = "Invalid CPF or related resource not found", content = @Content),
             @ApiResponse(responseCode = "422", description = "Business rule violation (e.g., CPF already exists)", content = @Content)
     })
-    ResponseEntity<MemberDTO> create(@RequestBody MemberDTO memberDTO) throws Exception;
+    ResponseEntity<MemberDTO> create(@RequestBody MemberDTO memberDTO);
 
     @Operation(summary = "Update an existing member")
     @ApiResponses({

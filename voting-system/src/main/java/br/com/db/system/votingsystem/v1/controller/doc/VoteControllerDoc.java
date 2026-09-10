@@ -38,7 +38,7 @@ public interface VoteControllerDoc {
             @ApiResponse(responseCode = "404", description = "Member or Agenda not found", content = @Content),
             @ApiResponse(responseCode = "422", description = "Business rule violation (e.g., duplicate vote)", content = @Content)
     })
-    ResponseEntity<VoteDTO> create(@RequestBody VoteDTO voteDTO) throws Exception;
+    ResponseEntity<VoteDTO> create(@RequestBody VoteDTO voteDTO);
 
     @Operation(summary = "Update an existing vote")
     @ApiResponses({
@@ -46,7 +46,7 @@ public interface VoteControllerDoc {
             @ApiResponse(responseCode = "400", description = "Invalid vote data", content = @Content),
             @ApiResponse(responseCode = "404", description = "Vote or Member not found", content = @Content)
     })
-    ResponseEntity<VoteDTO> update(@RequestBody VoteDTO voteDTO) throws Exception;
+    ResponseEntity<VoteDTO> update(@RequestBody VoteDTO voteDTO);
 
     @Operation(summary = "Delete vote by ID")
     @ApiResponses({

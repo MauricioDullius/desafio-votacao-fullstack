@@ -50,7 +50,7 @@ public class MemberController implements MemberControllerDoc {
 
     @Override
     @PostMapping
-    public ResponseEntity<MemberDTO> create(@RequestBody @Valid MemberDTO memberDTO) throws Exception {
+    public ResponseEntity<MemberDTO> create(@RequestBody @Valid MemberDTO memberDTO) {
         MemberDTO created = service.create(memberDTO);
         return ResponseEntity.status(201).body(created);
     }
