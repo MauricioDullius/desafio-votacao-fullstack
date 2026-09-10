@@ -1,6 +1,5 @@
 package br.com.db.system.votingsystem.v1.model.entity;
 
-import br.com.db.system.votingsystem.v1.model.enums.AgendaState;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,9 +29,6 @@ public class Agenda implements Serializable {
 
     @Column
     private LocalDateTime end;
-
-    @Transient
-    private AgendaState state;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assembly_id", nullable = false)

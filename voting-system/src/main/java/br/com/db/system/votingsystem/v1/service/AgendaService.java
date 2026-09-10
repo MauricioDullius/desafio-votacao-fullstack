@@ -162,8 +162,8 @@ public class AgendaService {
         Assembly assembly = assemblyService.findByIdEntity(dto.getAssemblyId());
 
         agenda.setDescription(dto.getDescription());
-        agenda.setStart(dto.getStart());
-        agenda.setEnd(dto.getEnd());
+        agenda.setStart(dto.getStart() == null ? agenda.getStart() : dto.getStart());
+        agenda.setEnd(dto.getEnd() == null ? agenda.getEnd() : dto.getEnd());
         agenda.setAssembly(assembly);
 
         DateUtils.validateDates(agenda.getStart(), agenda.getEnd());
