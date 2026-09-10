@@ -1,0 +1,16 @@
+package br.com.db.system.votingsystem.v1.exception;
+
+public class BusinessRuleException extends RuntimeException {
+
+    public BusinessRuleException() {
+        super();
+    }
+
+    public BusinessRuleException(String message) {
+        super(message);
+    }
+
+    public BusinessRuleException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
