@@ -6,10 +6,9 @@ import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {AgendaMapper.class})
+@Mapper(componentModel = "spring")
 public interface AssemblyMapper {
 
-    @Mapping(target = "agendas", source = "agendas")
     AssemblyDTO toDTO(Assembly assembly);
 
     @Mapping(target = "agendas", ignore = true)
