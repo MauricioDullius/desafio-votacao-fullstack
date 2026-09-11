@@ -5,21 +5,29 @@ const EMPTY_FORM = { name: '', cpf: '' }
 
 export default function MembersPage() {
   const [members, setMembers] = useState([])
+  const [page, setPage] = useState(0)
+  const [pageInfo, setPageInfo] = useState({ totalPages: 1, first: true, last: true })
   const [form, setForm] = useState(EMPTY_FORM)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState(null)
 
-  async function loadMembers() {
+  async function loadMembers(pageToLoad) {
     try {
-      const page = await membersApi.list()
-      setMembers(page.content ?? [])
+      const result = await membersApi.list(pageToLoad)
+      setMembers(result.content ?? [])
+      setPage(pageToLoad)
+      setPageInfo({
+        totalPages: result.totalPages ?? 1,
+        first: result.first ?? true,
+        last: result.last ?? true,
+      })
     } catch (err) {
       setMessage({ type: 'error', text: err.message })
     }
   }
 
   useEffect(() => {
-    loadMembers()
+    loadMembers(0)
   }, [])
 
   async function handleSubmit(event) {
@@ -30,7 +38,7 @@ export default function MembersPage() {
       await membersApi.create(form)
       setForm(EMPTY_FORM)
       setMessage({ type: 'success', text: 'Associado cadastrado com sucesso.' })
-      loadMembers()
+      loadMembers(0)
     } catch (err) {
       setMessage({ type: 'error', text: err.message })
     } finally {
@@ -99,6 +107,29 @@ export default function MembersPage() {
               ))}
             </tbody>
           </table>
+        )}
+        {members.length > 0 && (
+          <div className="pagination">
+            <button
+              className="secondary"
+              type="button"
+              onClick={() => loadMembers(page - 1)}
+              disabled={pageInfo.first}
+            >
+              Anterior
+            </button>
+            <span>
+              Página {page + 1} de {pageInfo.totalPages}
+            </span>
+            <button
+              className="secondary"
+              type="button"
+              onClick={() => loadMembers(page + 1)}
+              disabled={pageInfo.last}
+            >
+              Próxima
+            </button>
+          </div>
         )}
       </div>
     </section>

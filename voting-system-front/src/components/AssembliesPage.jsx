@@ -16,21 +16,29 @@ function defaultForm() {
 
 export default function AssembliesPage() {
   const [assemblies, setAssemblies] = useState([])
+  const [page, setPage] = useState(0)
+  const [pageInfo, setPageInfo] = useState({ totalPages: 1, first: true, last: true })
   const [form, setForm] = useState(defaultForm)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState(null)
 
-  async function loadAssemblies() {
+  async function loadAssemblies(pageToLoad) {
     try {
-      const page = await assembliesApi.list()
-      setAssemblies(page.content ?? [])
+      const result = await assembliesApi.list(pageToLoad)
+      setAssemblies(result.content ?? [])
+      setPage(pageToLoad)
+      setPageInfo({
+        totalPages: result.totalPages ?? 1,
+        first: result.first ?? true,
+        last: result.last ?? true,
+      })
     } catch (err) {
       setMessage({ type: 'error', text: err.message })
     }
   }
 
   useEffect(() => {
-    loadAssemblies()
+    loadAssemblies(0)
   }, [])
 
   async function handleSubmit(event) {
@@ -41,7 +49,7 @@ export default function AssembliesPage() {
       await assembliesApi.create(form)
       setForm(defaultForm())
       setMessage({ type: 'success', text: 'Assembleia criada com sucesso.' })
-      loadAssemblies()
+      loadAssemblies(0)
     } catch (err) {
       setMessage({ type: 'error', text: err.message })
     } finally {
@@ -118,6 +126,29 @@ export default function AssembliesPage() {
               ))}
             </tbody>
           </table>
+        )}
+        {assemblies.length > 0 && (
+          <div className="pagination">
+            <button
+              className="secondary"
+              type="button"
+              onClick={() => loadAssemblies(page - 1)}
+              disabled={pageInfo.first}
+            >
+              Anterior
+            </button>
+            <span>
+              Página {page + 1} de {pageInfo.totalPages}
+            </span>
+            <button
+              className="secondary"
+              type="button"
+              onClick={() => loadAssemblies(page + 1)}
+              disabled={pageInfo.last}
+            >
+              Próxima
+            </button>
+          </div>
         )}
       </div>
     </section>

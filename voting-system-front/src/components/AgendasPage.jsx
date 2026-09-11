@@ -16,6 +16,8 @@ function toIsoLocal(date) {
 
 export default function AgendasPage() {
   const [agendas, setAgendas] = useState([])
+  const [page, setPage] = useState(0)
+  const [pageInfo, setPageInfo] = useState({ totalPages: 1, first: true, last: true })
   const [assemblies, setAssemblies] = useState([])
   const [description, setDescription] = useState('')
   const [assemblyId, setAssemblyId] = useState('')
@@ -23,10 +25,16 @@ export default function AgendasPage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState(null)
 
-  async function loadAgendas() {
+  async function loadAgendas(pageToLoad) {
     try {
-      const page = await agendasApi.list()
-      setAgendas(page.content ?? [])
+      const result = await agendasApi.list(pageToLoad)
+      setAgendas(result.content ?? [])
+      setPage(pageToLoad)
+      setPageInfo({
+        totalPages: result.totalPages ?? 1,
+        first: result.first ?? true,
+        last: result.last ?? true,
+      })
     } catch (err) {
       setMessage({ type: 'error', text: err.message })
     }
@@ -45,7 +53,7 @@ export default function AgendasPage() {
   }
 
   useEffect(() => {
-    loadAgendas()
+    loadAgendas(0)
     loadAssemblies()
   }, [])
 
@@ -66,7 +74,7 @@ export default function AgendasPage() {
       })
       setDescription('')
       setMessage({ type: 'success', text: 'Pauta criada e sessão de votação aberta.' })
-      loadAgendas()
+      loadAgendas(0)
     } catch (err) {
       setMessage({ type: 'error', text: err.message })
     } finally {
@@ -129,7 +137,7 @@ export default function AgendasPage() {
       <div className="card">
         <div className="card-header-row">
           <h3>Pautas cadastradas</h3>
-          <button className="secondary" onClick={loadAgendas} type="button">
+          <button className="secondary" onClick={() => loadAgendas(page)} type="button">
             Atualizar
           </button>
         </div>
@@ -159,6 +167,29 @@ export default function AgendasPage() {
               })}
             </tbody>
           </table>
+        )}
+        {agendas.length > 0 && (
+          <div className="pagination">
+            <button
+              className="secondary"
+              type="button"
+              onClick={() => loadAgendas(page - 1)}
+              disabled={pageInfo.first}
+            >
+              Anterior
+            </button>
+            <span>
+              Página {page + 1} de {pageInfo.totalPages}
+            </span>
+            <button
+              className="secondary"
+              type="button"
+              onClick={() => loadAgendas(page + 1)}
+              disabled={pageInfo.last}
+            >
+              Próxima
+            </button>
+          </div>
         )}
       </div>
     </section>
